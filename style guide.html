@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>PORTFOLIO // Style Guide</title>
+
+    <!-- Google Fonts for Target Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================================================================
+           STYLE GUIDE TEMPLATE STYLING (From main.css)
+           ===================================================================== */
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .element {
+            padding-bottom: 2rem;
+            border-top-width: 0.15rem;
+            border-top-style: solid;
+            border-top-color: #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            margin-top: 6rem;
+            color: #222;
+        }
+
+        h3 {
+            font-style: italic;
+            margin-top: 1rem;
+            color: #444;
+        }
+
+        h4 {
+            margin-bottom: 0.25rem;
+            margin-top: 1.5rem;
+            color: #555;
+        }
+
+        p {
+            margin-top: 0;
+        }
+
+        nav.sg-nav {
+            background: #fff;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            margin-bottom: 2rem;
+        }
+
+        nav.sg-nav a {
+            margin-right: 1rem;
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav.sg-nav a:hover, nav.sg-nav a:focus {
+            text-decoration: underline;
+        }
+
+        code {
+            background-color: #EEE;
+            padding: 1rem;
+            display: block;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            border: 1px solid #ccc;
+        }
+
+        /* Container to simulate the target website's dark environment */
+        .preview-box {
+            background-color: var(--darker);
+            color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 2rem;
+            margin-top: 0.5rem;
+            border: 1px solid var(--magenta);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* =====================================================================
+           TARGET WEBSITE STYLING (From Portfolio)
+           ===================================================================== */
+        :root {
+            --yellow: #c07020; /* Muted Burnt Orange */
+            --cyan: #0099b3; /* Deeper, muted teal/cyan */
+            --magenta: #990066; /* Darker, muted plum/magenta */
+            --dark: #150024; /* Even darker background purple */
+            --darker: #06000d; /* Near black */
+            --light: #b0b0b0; /* Softer off-white/grey */
+            --border-width: 2px;
+        }
+
+        /* Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Target: Links */
+        .link {
+            color: var(--yellow);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 8px var(--magenta);
+        }
+
+        /* Target: Navigation Links */
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: clamp(1rem, 1.2vw, 1.3rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+            margin-left: 20px; /* added for preview spacing */
+        }
+
+        .nav-link::before {
+            content: '>';
+            color: var(--yellow);
+            opacity: 0;
+            position: absolute;
+            left: -15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+            left: -20px;
+        }
+
+        /* Target: Scroll Indicator / Primary Button style */
+        .scroll-indicator {
+            display: inline-block;
+            color: var(--yellow);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            border: 1px solid var(--yellow);
+            padding: 10px 20px;
+            transition: 0.3s;
+            background: rgba(192, 112, 32, 0.05);
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .scroll-indicator:hover {
+            background: rgba(192, 112, 32, 0.2);
+            box-shadow: 0 0 10px rgba(192, 112, 32, 0.3);
+        }
+
+        /* Target: Images */
+        .artifact-img {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid var(--cyan);
+            filter: grayscale(40%) contrast(120%) brightness(0.9);
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .artifact-img:hover {
+            border-color: var(--magenta);
+            filter: grayscale(0%) contrast(100%) brightness(1.1);
+            box-shadow: 0 0 15px rgba(255, 0, 170, 0.3);
+        }
+
+        /* Target: Headings */
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--yellow);
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 123, 0, 0.6);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--magenta);
+            font-size: 2rem;
+            margin: 0 0 1.5rem 0;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--magenta);
+            display: inline-block;
+            padding-right: 2rem;
+            text-shadow: 0 0 5px rgba(153, 0, 102, 0.3);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--cyan);
+            font-size: 1.6rem;
+            margin: 0 0 1rem 0;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        /* Target: Typography */
+        .preview-box p {
+            color: var(--light);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 2px rgba(224, 224, 224, 0.3);
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        /* Target: Lists */
+        .list-item {
+            color: var(--light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .list-item::before {
+            content: '>';
+            color: var(--yellow);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Target: Cyber Card */
+        .cyber-card {
+            background: rgba(21, 0, 36, 0.7);
+            border: 1px solid var(--cyan);
+            padding: 2.5rem;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+            backdrop-filter: blur(6px);
+            box-shadow: inset 0 0 10px rgba(0, 153, 179, 0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 0;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--magenta);
+            box-shadow: inset 0 0 15px rgba(153, 0, 102, 0.1);
+        }
+
+        .cyber-card::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 0;
+            right: 15px;
+            background: var(--light);
+            color: var(--darker);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 0 10px rgba(224, 224, 224, 0.5);
+            z-index: 2;
+        }
+
+        /* Target: Navigation Bar */
+        .main-nav {
+            background: rgba(13, 0, 26, 0.85);
+            border-bottom: 2px solid var(--magenta);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(255, 0, 170, 0.15);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>PORTFOLIO - Style Guide Template</h1>
+        <p>A comprehensive component library detailing the interactive, textual, and combined elements for the Cyberpunk portfolio architecture.</p>
+
+        <nav class="sg-nav">        
+            <a href="#ethos_rubric">Ethos & Process Analyses</a>
+            <a href="#interactive_elements">Interactive Elements</a>
+            <a href="#text_elements">Text Elements</a>
+            <a href="#combined_elements">Combined Elements</a>
+            <a href="#citations">Citations</a>
+        </nav>
+    </header>
+
+    <!-- ETHOS & RUBRIC REQUIREMENTS SECTION // -->
+    <section id="ethos_rubric">
+        <h2>Ethos & Process Analyses</h2>
+        <p><em>Note for grading: This section fulfills the rubric requirements for the Bio, Process Analyses, and the definition of the visual ethos. These textual components are rendered using the target portfolio's CSS classes to demonstrate how the text and visual styling integrate.</em></p>
+
+        <section class="element">
+            <h3>Visual Ethos Definition</h3>
+            <p><strong>Goal:</strong> Define the visual ethos as a VR Developer and Systems Engineer, avoiding clichéd stereotypes.</p>
+            <div class="preview-box">
+                <p>My visual ethos presents me as a VR Developer and Web Engineer operating at the intersection of complex backend systems and immersive spatial computing. To avoid clichéd 'hacker' tropes (e.g., bright matrix-green text on pure black), the design leans into a structured 'OS Terminal' aesthetic. It utilizes a sophisticated, muted neon palette (burnt orange, deep cyan, and plum), subtle CRT scanline overlays, and functional, high-legibility typography (Share Tech Mono paired with Orbitron). This approach communicates technical proficiency, raw functionality, and a calculated, data-driven mindset, resulting in an interface that feels like a highly specialized piece of industrial software rather than a generic tech portfolio.</p>
+            </div>
+        </section>
+
+        <section class="element">
+            <h3>Draft Bio (Under 100 Words)</h3>
+            <p><strong>Word Count:</strong> 76 words. Connects the textual identity directly to the visual "System/OS" aesthetic.</p>
+            <div class="preview-box">
+                <div class="cyber-card" data-label="SYS.BIO">
+                    <h3 class="card-title">Initiation // Bio</h3>
+                    <p style="margin-bottom: 0;">I am a VR Developer and Web Engineer specializing in immersive, high-performance digital environments. Bridging the gap between 3D space and web architecture, I build tools that push technical boundaries. My work is defined by a relentless drive to optimize complex systems and a cyberpunk-inspired ethos: raw, functional, and visually striking. I thrive in the neon-lit intersection of technical constraint and creative execution, transforming abstract backend data and spatial computing challenges into intuitive, visceral user experiences.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="element">
+            <h3>Process Analysis 01: Lumina</h3>
+            <p><strong>Word Count:</strong> 251 words. Demonstrates thinking through a problem and iterating over time.</p>
+            <div class="preview-box">
+                <h3 class="card-title" style="color: var(--magenta);">Lumina // AI Talent Intelligence</h3>
+                <p>Lumina was conceived at StormHacks 2025 to solve a massive data bottleneck: the manual extraction and verification of technical talent. The core problem was transforming unstructured, chaotic data streams—thousands of resumes and decentralized GitHub repositories—into legible, actionable intelligence. Aligning with my ethos of building highly functional, optimized systems, I wanted to create an application that didn't just parse data, but intelligently interrogated it like a digital archivist.</p>
+                <p>Initially, the challenge was balancing deep analysis with processing speed. Our early attempts at validating candidate claims against actual code resulted in sluggish response times due to the sheer volume of GitHub API calls and raw text processing. To iterate and overcome this, we architected a 4-phase agentic workflow utilizing Google Gemini. Rather than brute-forcing the data, our AI agents worked in sequential stages: gathering context from parsed PDFs, intelligently discovering relevant repositories, performing deep code evaluation, and synthesizing a final score.</p>
+                <p>To further optimize the pipeline, we integrated Pinecone for vector search, enabling semantic matching between job requirements and resume embeddings rather than relying on brittle keyword matching. Built on Next.js 15, React 19, and Tailwind CSS, the frontend translates this massive backend computation into a clean, highly responsive UI—presenting real-time analysis progress without overwhelming the user. Lumina demonstrates my core capability as a full-stack engineer: taking overwhelming datasets, rethinking the underlying architecture to leverage complex AI pipelines, and surfacing that data through an intuitive interface. It is the literal embodiment of extracting the hidden signal from the digital noise.</p>
+            </div>
+        </section>
+
+        <section class="element">
+            <h3>Process Analysis 02: Battery_Protocol</h3>
+            <p><strong>Word Count:</strong> 280 words. Demonstrates iterative problem solving in spatial computing.</p>
+            <div class="preview-box">
+                <h3 class="card-title" style="color: var(--yellow);">IAT_445: Battery_Protocol // VR Game</h3>
+                <p>For my IAT 445 project, I developed a narrative-driven VR puzzle game set in a decaying cyberpunk metropolis. The premise revolves around a robot traversing treacherous industrial levels to locate a rare battery and save a dying companion from powering down. Aligning with my design ethos, the environment is saturated with a gritty, neon-drenched atmosphere. However, the core gameplay loop presented a significant technical challenge: a dynamic scaling mechanic that allows the player to shrink to the size of a mouse to navigate air vents, or grow to bypass massive obstacles.</p>
+                <p>Implementing extreme scale changes in VR is notoriously difficult due to motion sickness and physics engine clipping. My initial prototype used an instantaneous scale transformation tied to a controller input. Playtesting immediately revealed this was violently disorienting, breaking immersion and causing severe nausea. Furthermore, the sudden shift in the player's collision mesh often resulted in falling through the floor or getting permanently stuck inside geometry. To iterate and solve this, I completely rebuilt the scaling logic. I implemented a smooth mathematical transition using Lerp over a fixed duration, coupled with a localized particle effect to anchor the player's vision during the shift.</p>
+                <p>To resolve the physics breaking, I engineered a custom volumetric raycast check that verifies the target size has adequate clearance before allowing the scale change to execute. If a player attempts to grow while inside a confined vent, the system triggers a haptic feedback warning and prevents the action. The final result is a seamless, highly engaging spatial puzzle mechanic. This project highlights my ability to take an ambitious spatial computing concept, identify severe UX and physical limitations through user testing, and iterate towards a polished, comfortable VR experience.</p>
+            </div>
+        </section>
+
+    </section>
+    <!-- // ETHOS & RUBRIC REQUIREMENTS SECTION -->
+
+    <!-- INTERACTIVE ELEMENTS SECTION // -->
+    <section id="interactive_elements">
+        <h2>Interactive Elements</h2>
+
+        <section class="element">
+            <h3>In-text link</h3>
+            <h4>CSS selector:</h4>
+            <p>.link</p>
+            <h4>Sample code:</h4>
+            <code>&lt;p&gt;View the &lt;a href="#" class="link"&gt;> SOURCE_CODE&lt;/a&gt; for more info.&lt;/p&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <p style="margin: 0;">View the <a href="#" class="link">> SOURCE_CODE</a> for more info.</p>
+            </div>
+        </section>
+
+
+        <section class="element">
+            <h3>Navigation Link</h3>
+            <h4>CSS selector:</h4>
+            <p>.nav-link</p>
+            <h4>Sample code:</h4>
+            <code>&lt;a href="#bio" class="nav-link"&gt;Bio&lt;/a&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <a href="#bio" class="nav-link">Bio</a>
+            </div>
+        </section>
+
+
+        <section class="element">
+            <h3>Primary Action / Scroll Button</h3>
+            <h4>CSS selector:</h4>
+            <p>.scroll-indicator</p>
+            <h4>Sample code:</h4>
+            <code>&lt;a href="#bio" class="scroll-indicator"&gt;
+  &lt;span class="blink"&gt;▼&lt;/span&gt; INITIATE_SEQUENCE &lt;span class="blink"&gt;▼&lt;/span&gt;
+&lt;/a&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <a href="#bio" class="scroll-indicator">
+                    <span class="blink">▼</span> INITIATE_SEQUENCE <span class="blink">▼</span>
+                </a>
+            </div>
+        </section>
+
+
+        <section class="element">
+            <h3>Image as a Link (Artifact)</h3>
+            <h4>CSS selector:</h4>
+            <p>.artifact-img</p>
+            <h4>Sample code:</h4>
+            <code>&lt;a href="#"&gt;
+  &lt;img src="https://picsum.photos/300/200" alt="Cyberpunk asset" class="artifact-img"&gt;
+&lt;/a&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <a href="#">
+                    <img src="https://picsum.photos/300/200" alt="Cyberpunk asset" class="artifact-img">
+                </a>
+            </div>
+        </section>
+
+    </section>
+    <!-- // INTERACTIVE ELEMENTS SECTION -->
+
+
+
+    <!-- TEXT ELEMENTS SECTION // -->
+    <section id="text_elements">
+        <h2>Text Elements</h2>
+
+        <section class="element">
+            <h3>Headings</h3>
+            <h4>CSS selectors:</h4>
+            <p>.nav-brand (Logo), .section-title (H2 Equivalent), .card-title (H3 Equivalent)</p>
+            <h4>Sample code:</h4>
+            <code>&lt;div class="nav-brand"&gt;PORTFOLIO&lt;/div&gt;
+&lt;h2 class="section-title"&gt;Process_Analyses&lt;/h2&gt;
+&lt;h3 class="card-title"&gt;Lumina // AI Talent Intelligence&lt;/h3&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <div class="nav-brand" style="margin-bottom: 1.5rem;">PORTFOLIO</div>
+                <h2 class="section-title" style="margin-top: 0;">Process_Analyses</h2><br>
+                <h3 class="card-title">Lumina // AI Talent Intelligence</h3>
+            </div>
+        </section>
+
+        <section class="element">
+            <h3>Paragraphs</h3>
+            <h4>CSS selector:</h4>
+            <p>p (Inside main body context)</p>
+            <h4>Sample code:</h4>
+            <code>&lt;p&gt;I am a VR Developer and Web Engineer specializing in immersive, high-performance digital environments. Bridging the gap between 3D space and web architecture, I build tools that push technical boundaries.&lt;/p&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <p>I am a VR Developer and Web Engineer specializing in immersive, high-performance digital environments. Bridging the gap between 3D space and web architecture, I build tools that push technical boundaries.</p>
+            </div>
+        </section>
+
+        <section class="element">
+            <h3>Custom List Item</h3>
+            <h4>CSS selector:</h4>
+            <p>.list-item</p>
+            <h4>Sample code:</h4>
+            <code>&lt;div class="list-item"&gt;VR / AR Systems Engineering&lt;/div&gt;
+&lt;div class="list-item"&gt;Creative Technology & WebGL&lt;/div&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <div class="list-item">VR / AR Systems Engineering</div>
+                <div class="list-item">Creative Technology & WebGL</div>
+            </div>
+        </section>
+
+    </section>
+    <!-- // TEXT ELEMENTS SECTION -->
+
+
+
+    <!-- COMBINED ELEMENTS SECTION // -->
+    <section id="combined_elements">
+        <h2>Combined Elements</h2>
+
+        <section class="element">
+            <h3>Main Navigation Bar</h3>
+            <h4>Sample code:</h4>
+            <code>&lt;nav class="main-nav"&gt;
+  &lt;div class="nav-brand"&gt;PORTFOLIO&lt;/div&gt;
+  &lt;div class="nav-links"&gt;
+    &lt;a href="#bio" class="nav-link"&gt;Bio&lt;/a&gt;
+    &lt;a href="#process" class="nav-link"&gt;Process&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box" style="padding: 0;">
+                <nav class="main-nav">
+                    <div class="nav-brand">PORTFOLIO</div>
+                    <div class="nav-links">
+                        <a href="#bio" class="nav-link">Bio</a>
+                        <a href="#process" class="nav-link">Process</a>
+                    </div>
+                </nav>
+            </div>
+        </section>
+
+        <section class="element">
+            <h3>Cyber Data Card</h3>
+            <h4>Sample code:</h4>
+            <code>&lt;div class="cyber-card" data-label="SYS.BIO"&gt;
+  &lt;h3 class="card-title"&gt;Initiation // Bio&lt;/h3&gt;
+  &lt;p&gt;Information fragment retrieved successfully. System standing by...&lt;/p&gt;
+&lt;/div&gt;</code>
+
+            <h4>Rendered element:</h4>
+            <div class="preview-box">
+                <div class="cyber-card" data-label="SYS.BIO">
+                    <h3 class="card-title">Initiation // Bio</h3>
+                    <p style="margin-bottom: 0;">Information fragment retrieved successfully. System standing by...</p>
+                </div>
+            </div>
+        </section>
+
+    </section>
+    <!-- // COMBINED ELEMENTS SECTION -->
+
+
+
+    <section id="citations">
+        <h2>Citations</h2>
+        <ul>
+            <li>Pelletier, Matteson. Designer. (N.D.). <strong>Orbitron [Font]</strong>. Retrieved from <a href="https://fonts.google.com/specimen/Orbitron">https://fonts.google.com/specimen/Orbitron</a></li>
+            <li>De Rosa, Ralph. Designer. (N.D.). <strong>Share Tech Mono [Font]</strong>. Retrieved from <a href="https://fonts.google.com/specimen/Share+Tech+Mono">https://fonts.google.com/specimen/Share+Tech+Mono</a></li>
+            <li>Lorem Picsum. Service. 2026. <strong>Random Stock Image [Image]</strong>. Retrieved from <a href="https://picsum.photos/">https://picsum.photos/</a></li>
+        </ul>
+    </section>
+
+</body>
+</html>

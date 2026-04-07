@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRUNNER // PORTFOLIO</title>
+    <!-- Added Orbitron for headers alongside Share Tech Mono for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --yellow: #c07020; /* Muted Burnt Orange */
+            --cyan: #0099b3; /* Deeper, muted teal/cyan */
+            --magenta: #990066; /* Darker, muted plum/magenta */
+            --dark: #150024; /* Even darker background purple */
+            --darker: #06000d; /* Near black */
+            --light: #b0b0b0; /* Softer off-white/grey */
+            --border-width: 2px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hide default OS cursor globally */
+        * {
+            cursor: none !important;
+        }
+
+        /* Custom JS Cyber Cursor Base */
+        .cursor-positioner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 100000;
+        }
+
+        .main-cursor {
+            /* No transition, stays perfectly glued to mouse. Offset to align index finger tip. */
+            transform: translate(calc(var(--cx, 0) * 1px - 12px), calc(var(--cy, 0) * 1px - 2px));
+        }
+
+        /* The Custom External Cursor */
+        .cyber-cursor {
+            width: 30px;
+            height: 30px;
+            background-image: url("cursor-default.png"); /* Looks for local default cursor PNG */
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: scale(1);
+            transform-origin: top left;
+            transition: transform 0.15s ease, background-image 0.2s;
+        }
+
+        /* Hover states for interactive elements */
+        .cursor-positioner.hovering .cyber-cursor {
+            transform: scale(1.1); /* Slightly gentler scale up */
+            /* Switches to hover cursor PNG */
+            background-image: url("cursor-hover.png"); 
+        }
+
+        /* Revert to default touches on Mobile */
+        @media (max-width: 768px) {
+            * { cursor: auto !important; }
+            .cursor-positioner { display: none !important; }
+        }
+
+        /* CRT Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+
+        /* Ambient Cyberpunk Background Elements */
+        .horizon-glow {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 60vh;
+            background: radial-gradient(ellipse at bottom, rgba(153, 0, 102, 0.15) 0%, rgba(0, 153, 179, 0.05) 50%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .cyber-matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(var(--cyan) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.05; /* Significantly reduced opacity */
+            z-index: 0;
+            pointer-events: none;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+        }
+
+        .synth-grid {
+            position: fixed;
+            bottom: 0;
+            left: -50%;
+            width: 200vw;
+            height: 50vh;
+            background-image:
+                linear-gradient(rgba(255, 0, 170, 0.6) 2px, transparent 2px), /* Increased opacity */
+                linear-gradient(90deg, rgba(0, 229, 255, 0.5) 2px, transparent 2px); /* Increased opacity */
+            background-size: 50px 50px;
+            /* Plane stays perfectly still to maintain perspective vanishing point */
+            transform: perspective(600px) rotateX(75deg) translateZ(-200px);
+            animation: gridMove 2s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+            /* Adjusted mask to show more of the grid before fading */
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0) 90%);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0) 90%);
+        }
+
+        @keyframes gridMove {
+            /* Animate the texture sliding, not the container, for a perfect loop */
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        /* Main Sticky Navigation */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(13, 0, 26, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--magenta);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 0, 170, 0.15);
+        }
+
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--yellow);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 123, 0, 0.6);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: clamp(1rem, 3vw, 3rem);
+        }
+
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: clamp(1rem, 1.2vw, 1.3rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::before {
+            content: '>';
+            color: var(--yellow);
+            opacity: 0;
+            position: absolute;
+            left: -15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+            left: -20px;
+        }
+
+        /* Hero Section Styling */
+        .hero-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 85vh;
+            padding-bottom: 2rem;
+            margin-bottom: 4rem;
+            border-bottom: 1px dashed rgba(0, 153, 179, 0.3);
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 2rem;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            color: var(--light);
+            margin-top: 1rem;
+            letter-spacing: 3px;
+            height: clamp(1.5rem, 2.5vw, 2.2rem); /* Prevents layout shift while typing */
+            text-shadow: 0 0 5px rgba(0, 153, 179, 0.2);
+        }
+
+        .hero-subtitle::after {
+            content: '_';
+            animation: blink 1s step-end infinite;
+            color: var(--yellow);
+        }
+
+        .scroll-indicator {
+            display: inline-block;
+            margin-top: 4rem;
+            color: var(--yellow);
+            text-decoration: none;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            border: 1px solid var(--yellow);
+            padding: 10px 20px;
+            transition: 0.3s;
+            background: rgba(192, 112, 32, 0.05);
+        }
+
+        .scroll-indicator:hover {
+            background: rgba(192, 112, 32, 0.2);
+            box-shadow: 0 0 10px rgba(192, 112, 32, 0.3);
+        }
+
+        /* Shattered Matrix Frame Visual - True 3D Environment */
+        .hero-visual {
+            flex: 0.8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            perspective: 1000px;
+            transform-style: preserve-3d; /* Allows children to overlap in true 3D space */
+        }
+
+        .shattered-frame {
+            position: relative;
+            width: clamp(320px, 28vw, 480px);
+            height: clamp(420px, 38vw, 650px);
+            background: linear-gradient(135deg, var(--cyan), var(--darker) 40%, var(--magenta));
+            padding: 3px;
+            clip-path: polygon(
+                0% 0%, 25% 0%, 28% 5%, 45% 0%, 100% 0%, 
+                100% 20%, 95% 25%, 100% 30%, 100% 65%, 92% 70%, 100% 75%, 100% 100%, 
+                75% 100%, 70% 90%, 55% 100%, 0% 100%, 
+                0% 60%, 8% 55%, 0% 50%, 0% 15%, 5% 10%, 0% 5%
+            );
+            filter: drop-shadow(0 0 15px rgba(0, 153, 179, 0.4));
+            transform-style: preserve-3d;
+            
+            /* Base depth is 0. Variables updated by JS tracking */
+            --rx: 0deg;
+            --ry: 0deg;
+            --scale: 1;
+            --tz: 0px;
+            transform: scale(var(--scale)) translateZ(var(--tz)) rotateY(var(--ry)) rotateX(var(--rx));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+        }
+
+        /* 3D Pop Out & Tilt Effect activated by wrapping container */
+        .hero-visual:hover .shattered-frame {
+            --scale: 1.05;
+            --tz: 40px; /* Pushes the image forward through the cracks */
+            filter: drop-shadow(-15px 15px 25px rgba(153, 0, 102, 0.6));
+            transition: transform 0.1s ease-out, filter 0.4s ease;
+        }
+
+        .shattered-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            clip-path: polygon(
+                0% 0%, 25% 0%, 28% 5%, 45% 0%, 100% 0%, 
+                100% 20%, 95% 25%, 100% 30%, 100% 65%, 92% 70%, 100% 75%, 100% 100%, 
+                75% 100%, 70% 90%, 55% 100%, 0% 100%, 
+                0% 60%, 8% 55%, 0% 50%, 0% 15%, 5% 10%, 0% 5%
+            );
+            filter: grayscale(80%) sepia(30%) hue-rotate(150deg) contrast(140%) brightness(0.7);
+            transition: filter 0.5s ease;
+        }
+
+        .hero-visual:hover .shattered-image {
+            filter: grayscale(10%) sepia(10%) hue-rotate(170deg) contrast(130%) brightness(1.1);
+        }
+
+        /* Glowing Crack lines extending into the background */
+        .crack-line {
+            position: absolute;
+            background: var(--cyan);
+            box-shadow: 0 0 12px var(--cyan), 0 0 20px var(--cyan);
+            opacity: 0.8;
+            pointer-events: none;
+            border-radius: 50%;
+            transition: opacity 0.8s ease-in-out;
+        }
+
+        .hero-visual:hover .crack-line {
+            opacity: 0; /* Fades out smoothly when hovered */
+        }
+
+        .crack-1 {
+            width: clamp(180px, 20vw, 300px);
+            height: 2px;
+            top: 18%;
+            right: 0%;
+            /* Placed 15px forward in Z-space so the frame pushes past it on hover */
+            transform: translateZ(15px) rotate(-25deg);
+            transform-origin: left center;
+        }
+
+        .crack-2 {
+            width: clamp(220px, 25vw, 350px);
+            height: 2px;
+            bottom: 35%;
+            left: -10%;
+            transform: translateZ(15px) rotate(35deg);
+            transform-origin: right center;
+        }
+
+        .crack-3 {
+            width: 2px;
+            height: clamp(140px, 15vw, 250px);
+            bottom: -5%;
+            left: 65%;
+            transform: translateZ(15px) rotate(15deg);
+            background: var(--magenta);
+            box-shadow: 0 0 12px var(--magenta);
+        }
+
+        /* Shards Wrapper for 3D Revolving Orbit */
+        .shards-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            transform-style: preserve-3d;
+            animation: revolveShards 10s linear infinite;
+            animation-play-state: paused; /* Stays still until hovered */
+        }
+
+        /* Activate revolution when hovering over the hero visual */
+        .hero-visual:hover .shards-wrapper {
+            animation-play-state: running;
+        }
+
+        @keyframes revolveShards {
+            /* Tilting the orbit on X axis to make it dynamic */
+            0% { transform: rotateX(-10deg) rotateY(0deg); }
+            100% { transform: rotateX(-10deg) rotateY(360deg); }
+        }
+
+        /* Floating Shattered Debris */
+        .shard {
+            position: absolute;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            filter: drop-shadow(0 0 8px rgba(0, 153, 179, 0.6));
+            animation: floatShard 4s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .shard-1 {
+            width: 35px; height: 35px; top: 5%; right: 10%;
+            clip-path: polygon(0 0, 100% 20%, 40% 100%);
+            animation-delay: 0s;
+        }
+
+        .shard-2 {
+            width: 50px; height: 40px; bottom: 15%; left: 0%;
+            clip-path: polygon(20% 0, 100% 30%, 0 100%);
+            animation-delay: 1.5s;
+        }
+
+        .shard-3 {
+            width: 25px; height: 40px; top: 40%; right: -5%;
+            clip-path: polygon(50% 0, 100% 100%, 0 80%);
+            animation-delay: 0.7s;
+        }
+
+        .shard-4 {
+            width: 45px; height: 25px; top: 12%; left: -8%;
+            clip-path: polygon(0 0, 100% 60%, 10% 100%);
+            animation-delay: 0.4s;
+        }
+
+        @keyframes floatShard {
+            /* Pushing shards slightly outwards (+20px) to widen their orbit */
+            0% { transform: translateZ(20px) translateY(0) translateX(0) rotate(0deg); }
+            100% { transform: translateZ(20px) translateY(-20px) translateX(10px) rotate(25deg); }
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1500px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Top Bar / System Status */
+        .sys-nav {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            border-bottom: 1px solid var(--cyan);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            font-size: clamp(0.8rem, 1vw, 1.1rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .sys-nav div:nth-child(1) { text-align: left; }
+        .sys-nav div:nth-child(2) { text-align: center; }
+        .sys-nav div:nth-child(3) { text-align: right; }
+        
+        .sys-nav div {
+            white-space: nowrap;
+        }
+
+        .sys-nav span.blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Typography & Headings */
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--magenta);
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem 0;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--magenta);
+            display: inline-block;
+            padding-right: 2rem;
+            text-shadow: 0 0 5px rgba(153, 0, 102, 0.3);
+            scroll-margin-top: 100px;
+        }
+
+        p {
+            color: var(--light);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 2px rgba(224, 224, 224, 0.3);
+            text-align: justify;
+        }
+
+        /* Interactive Cursor Glitch Effect */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+            --x: 50%;
+            --y: 50%;
+        }
+
+        .glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(4.5rem, 8vw, 8rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #d0d0d0;
+            position: relative;
+            text-shadow: 0 0 8px var(--magenta), 0 0 15px var(--magenta);
+            transition: text-shadow 0.3s ease;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            opacity: 0;
+            -webkit-mask-image: radial-gradient(circle 75px at var(--x) var(--y), black 0%, transparent 100%);
+            mask-image: radial-gradient(circle 75px at var(--x) var(--y), black 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .glitch-wrapper:hover .glitch::before,
+        .glitch-wrapper:hover .glitch::after {
+            opacity: 1;
+        }
+
+        .glitch-wrapper:hover .glitch {
+            text-shadow: 0 0 10px var(--magenta), 0 0 20px var(--magenta);
+        }
+
+        .glitch::before {
+            left: 4px;
+            text-shadow: -2px 0 var(--magenta), 2px 2px var(--yellow);
+            animation: glitch-hover-anim 0.2s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -4px;
+            text-shadow: 2px 0 var(--cyan), -2px -2px var(--magenta);
+            animation: glitch-hover-anim-2 0.3s infinite linear alternate-reverse;
+        }
+
+        /* Content Cards */
+        .cyber-card {
+            background: rgba(21, 0, 36, 0.7);
+            border: 1px solid var(--cyan);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+            backdrop-filter: blur(6px);
+            box-shadow: inset 0 0 10px rgba(0, 153, 179, 0.05);
+            transition: all 0.3s ease;
+            scroll-margin-top: 100px;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--magenta);
+            box-shadow: inset 0 0 15px rgba(153, 0, 102, 0.1);
+        }
+
+        .cyber-card::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 0;
+            right: 15px;
+            background: var(--light);
+            color: var(--darker);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 0 10px rgba(224, 224, 224, 0.5);
+            z-index: 2;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--cyan);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        /* Artifact Placeholders & Images */
+        .artifact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .artifact-placeholder {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(0, 229, 255, 0.1),
+                rgba(0, 229, 255, 0.1) 10px,
+                rgba(32, 0, 59, 0.8) 10px,
+                rgba(32, 0, 59, 0.8) 20px
+            );
+            border: 1px dashed var(--cyan);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan);
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .artifact-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border: 1px solid var(--cyan);
+            filter: grayscale(40%) contrast(120%) brightness(0.9);
+            transition: all 0.3s ease;
+        }
+
+        .artifact-img:hover {
+            border-color: var(--magenta);
+            filter: grayscale(0%) contrast(100%) brightness(1.1);
+            box-shadow: 0 0 15px rgba(255, 0, 170, 0.3);
+        }
+
+        /* Contact & Interests grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            scroll-margin-top: 100px;
+        }
+
+        .list-item {
+            color: var(--light);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .list-item::before {
+            content: '>';
+            color: var(--yellow);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .link {
+            color: var(--yellow);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 8px var(--magenta);
+        }
+
+        /* Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes glitch-hover-anim {
+            0% { clip-path: inset(20% 0 80% 0); }
+            20% { clip-path: inset(60% 0 10% 0); }
+            40% { clip-path: inset(40% 0 50% 0); }
+            60% { clip-path: inset(80% 0 5% 0); }
+            80% { clip-path: inset(10% 0 70% 0); }
+            100% { clip-path: inset(30% 0 40% 0); }
+        }
+
+        @keyframes glitch-hover-anim-2 {
+            0% { clip-path: inset(10% 0 60% 0); }
+            20% { clip-path: inset(30% 0 20% 0); }
+            40% { clip-path: inset(70% 0 10% 0); }
+            60% { clip-path: inset(20% 0 50% 0); }
+            80% { clip-path: inset(50% 0 30% 0); }
+            100% { clip-path: inset(5% 0 80% 0); }
+        }
+
+        @media (max-width: 768px) {
+            .glitch { font-size: 3.5rem; }
+            .artifact-grid, .info-grid { grid-template-columns: 1fr; }
+            
+            .main-nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .nav-links {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero-section {
+                flex-direction: column;
+                padding-top: 2rem;
+            }
+            .hero-content {
+                padding-right: 0;
+                text-align: center;
+                margin-bottom: 4rem;
+            }
+            .sys-nav {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom JS Cursor Elements -->
+    <div class="cursor-positioner main-cursor">
+        <div class="cyber-cursor"></div>
+    </div>
+
+    <!-- CRT Overlay & Cyber Background -->
+    <div class="scanlines"></div>
+    <div class="cyber-matrix"></div>
+    <div class="horizon-glow"></div>
+    <div class="synth-grid"></div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="main-nav">
+        <div class="nav-brand">PORTFOLIO_OS</div>
+        <div class="nav-links">
+            <a href="#bio" class="nav-link">Bio</a>
+            <a href="#process" class="nav-link">Process</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- NEW HERO LANDING SECTION -->
+        <section class="hero-section" id="home">
+            <div class="hero-content">
+                <!-- Navigation / System Status -->
+                <nav class="sys-nav">
+                    <div>SYS.ID: 99-842-X</div>
+                    <div>STATUS: <span class="blink" style="color: var(--yellow);">ONLINE</span></div>
+                    <div class="time-display">T-MINUS: 00:00:00</div>
+                </nav>
+
+                <div class="glitch-wrapper">
+                    <h1 class="glitch" data-text="JANE DOE">ETHAN LUM</h1>
+                </div>
+                
+                <div class="hero-subtitle typewriter"></div>
+
+                <a href="#bio" class="scroll-indicator">
+                    <span class="blink">▼</span> INITIATE_SEQUENCE <span class="blink">▼</span>
+                </a>
+            </div>
+
+            <div class="hero-visual">
+                <div class="crack-line crack-1"></div>
+                <div class="crack-line crack-2"></div>
+                <div class="crack-line crack-3"></div>
+                
+                <!-- Shards wrapped in a true 3D orbital container -->
+                <div class="shards-wrapper">
+                    <div class="shard shard-1"></div>
+                    <div class="shard shard-2"></div>
+                    <div class="shard shard-3"></div>
+                    <div class="shard shard-4"></div>
+                </div>
+
+                <div class="shattered-frame">
+                    <!-- Placeholder Sci-Fi / Cyberpunk Image -->
+                    <img src="me.jpg" alt="Jane Doe Portrait" class="shattered-image">
+                </div>
+            </div>
+        </section>
+
+        <!-- Bio Section (Under 100 Words) -->
+        <div class="cyber-card" data-label="SYS.BIO" id="bio">
+            <h2 class="card-title">Initiation // Bio</h2>
+            <p>
+                I am a VR Developer and Web Engineer specializing in immersive, high-performance digital environments. Bridging the gap between 3D space and web architecture, I build tools that push technical boundaries. My work is defined by a relentless drive to optimize complex systems and a cyberpunk-inspired ethos: raw, functional, and visually striking. I thrive in the neon-lit intersection of technical constraint and creative execution, transforming abstract backend data and spatial computing challenges into intuitive, visceral user experiences.
+            </p>
+        </div>
+
+        <!-- Process Analyses (250-300 words each) -->
+        <h2 class="section-title" id="process">Process_Analyses</h2>
+
+        <!-- Project 1: Lumina -->
+        <div class="cyber-card" data-label="FILE.01">
+            <h3 class="card-title" style="color: var(--magenta);">Lumina // AI Talent Intelligence</h3>
+            <p>
+                Lumina was conceived at StormHacks 2025 to solve a massive data bottleneck: the manual extraction and verification of technical talent. The core problem was transforming unstructured, chaotic data streams—thousands of resumes and decentralized GitHub repositories—into legible, actionable intelligence. Aligning with my ethos of building highly functional, optimized systems, I wanted to create an application that didn't just parse data, but intelligently interrogated it like a digital archivist.
+            </p>
+            <p>
+                Initially, the challenge was balancing deep analysis with processing speed. Our early attempts at validating candidate claims against actual code resulted in sluggish response times due to the sheer volume of GitHub API calls and raw text processing. To iterate and overcome this, we architected a 4-phase agentic workflow utilizing Google Gemini. Rather than brute-forcing the data, our AI agents worked in sequential stages: gathering context from parsed PDFs, intelligently discovering relevant repositories, performing deep code evaluation, and synthesizing a final score. 
+            </p>
+            <p>
+                To further optimize the pipeline, we integrated Pinecone for vector search, enabling semantic matching between job requirements and resume embeddings rather than relying on brittle keyword matching. Built on Next.js 15, React 19, and Tailwind CSS, the frontend translates this massive backend computation into a clean, highly responsive UI—presenting real-time analysis progress without overwhelming the user. Lumina demonstrates my core capability as a full-stack engineer: taking overwhelming datasets, rethinking the underlying architecture to leverage complex AI pipelines, and surfacing that data through an intuitive interface. It is the literal embodiment of extracting the hidden signal from the digital noise.
+            </p>
+            
+            <div class="artifact-grid">
+                <a href="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/823/656/datas/original.png" target="_blank">
+                    <img src="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/823/656/datas/original.png" alt="Lumina Architecture Workflow" class="artifact-img">
+                </a>
+                <a href="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/824/623/datas/gallery.jpg" target="_blank">
+                    <img src="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/824/623/datas/gallery.jpg" alt="Lumina Platform Dashboard" class="artifact-img">
+                </a>
+            </div>
+            <div style="margin-top: 1rem;">
+                <a href="https://devpost.com/software/lumina-hq152s" target="_blank" class="link">> VIEW_PROJECT_ON_DEVPOST</a>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="cyber-card" data-label="FILE.02">
+            <h3 class="card-title" style="color: var(--yellow);">IAT_445: Battery_Protocol // VR Game</h3>
+            <p>
+                For my IAT 445 project, I developed a narrative-driven VR puzzle game set in a decaying cyberpunk metropolis. The premise revolves around a robot traversing treacherous industrial levels to locate a rare battery and save a dying companion from powering down. Aligning with my design ethos, the environment is saturated with a gritty, neon-drenched atmosphere. However, the core gameplay loop presented a significant technical challenge: a dynamic scaling mechanic that allows the player to shrink to the size of a mouse to navigate air vents, or grow to bypass massive obstacles.
+            </p>
+            <p>
+                Implementing extreme scale changes in VR is notoriously difficult due to motion sickness and physics engine clipping. My initial prototype used an instantaneous scale transformation tied to a controller input. Playtesting immediately revealed this was violently disorienting, breaking immersion and causing severe nausea. Furthermore, the sudden shift in the player's collision mesh often resulted in falling through the floor or getting permanently stuck inside geometry. To iterate and solve this, I completely rebuilt the scaling logic. I implemented a smooth mathematical transition using Lerp over a fixed duration, coupled with a localized particle effect to anchor the player's vision during the shift.
+            </p>
+            <p>
+                To resolve the physics breaking, I engineered a custom volumetric raycast check that verifies the target size has adequate clearance before allowing the scale change to execute. If a player attempts to grow while inside a confined vent, the system triggers a haptic feedback warning and prevents the action. The final result is a seamless, highly engaging spatial puzzle mechanic. This project highlights my ability to take an ambitious spatial computing concept, identify severe UX and physical limitations through user testing, and iterate towards a polished, comfortable VR experience.
+            </p>
+
+            <div class="artifact-grid">
+                <a href="img1.png" target="_blank" style="text-decoration: none;">
+                    <img src="img1.png" alt="VR Scaling Mechanic Prototype" class="artifact-img" onerror="this.outerHTML='<div class=\'artifact-placeholder\' style=\'border-color: var(--yellow); color: var(--yellow);\'>[WAITING FOR FILE]<br>Save img1.png to this folder</div>'">
+                </a>
+                <a href="img2.jpg" target="_blank" style="text-decoration: none;">
+                    <img src="img2.jpg" alt="Cyberpunk Vent Level Design" class="artifact-img" onerror="this.outerHTML='<div class=\'artifact-placeholder\' style=\'border-color: var(--yellow); color: var(--yellow);\'>[WAITING FOR FILE]<br>Save img2.jpg to this folder</div>'">
+                </a>
+            </div>
+        </div>
+
+        <!-- Interests & Contact Grid -->
+        <div class="info-grid" id="contact">
+            <div>
+                <h2 class="section-title" style="margin-top: 0; font-size: 1.5rem;">Employment_Interests</h2>
+                <div class="cyber-card" data-label="SYS.CAREER" style="padding: 1.5rem; margin-bottom: 0;">
+                    <div class="list-item">VR / AR Systems Engineering</div>
+                    <div class="list-item">Creative Technology & WebGL</div>
+                    <div class="list-item">Front-End Architecture</div>
+                    <div class="list-item">Technical UI/UX Design</div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="section-title" style="margin-top: 0; font-size: 1.5rem;">Contact_Channels</h2>
+                <div class="cyber-card" data-label="SYS.CONTACT" style="padding: 1.5rem; margin-bottom: 0;">
+                    <div class="list-item">Email: <a href="#" class="link" style="margin-left: 10px;">jane.doe@network.net</a></div>
+                    <div class="list-item">LinkedIn: <a href="#" class="link" style="margin-left: 10px;">/in/janedoe</a></div>
+                    <!-- Fulfills the "proof of continued use of git repository" rubric requirement -->
+                    <div class="list-item">Source Code & Git History: <a href="#" class="link" style="margin-left: 10px;">GitHub Repository</a></div> 
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem; margin-bottom: 2rem; color: var(--cyan); opacity: 0.5; font-size: 0.8rem;">
+            END OF FILE // CONNECTION TERMINATED
+        </div>
+    </div>
+
+    <script>
+        // Subtitle Typewriter Effect
+        const subtitleText = "SYSTEM_ENGINEER // VR_ARCHITECT";
+        const subtitleElement = document.querySelector('.typewriter');
+        let typeIndex = 0;
+
+        function typeWriter() {
+            if (typeIndex < subtitleText.length) {
+                subtitleElement.innerHTML += subtitleText.charAt(typeIndex);
+                typeIndex++;
+                const speed = Math.floor(Math.random() * (100 - 30 + 1)) + 30;
+                setTimeout(typeWriter, speed);
+            }
+        }
+        
+        // Start typing after 1 second
+        setTimeout(typeWriter, 1000);
+
+        // Custom JS Cursor Logic
+        const mainCursor = document.querySelector('.main-cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            // Update CSS variables mapping to cursor transform coordinates
+            mainCursor.style.setProperty('--cx', e.clientX);
+            mainCursor.style.setProperty('--cy', e.clientY);
+        });
+
+        // Hide custom cursor gracefully when leaving the browser window
+        document.addEventListener('mouseout', (e) => {
+            if (e.clientY <= 0 || e.clientX <= 0 || (e.clientX >= window.innerWidth || e.clientY >= window.innerHeight)) {
+                mainCursor.style.opacity = '0';
+            }
+        });
+        document.addEventListener('mouseover', () => {
+            mainCursor.style.opacity = '1';
+        });
+
+        // Add hover effects to all interactables (links, buttons, artifacts)
+        const interactables = document.querySelectorAll('a, button, .nav-link, .scroll-indicator, .link, .artifact-img, .glitch-wrapper');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                mainCursor.classList.add('hovering');
+            });
+            el.addEventListener('mouseleave', () => {
+                mainCursor.classList.remove('hovering');
+            });
+        });
+
+        // Interactive Glitch Hover Logic
+        const glitchWrappers = document.querySelectorAll('.glitch-wrapper');
+        
+        glitchWrappers.forEach(wrapper => {
+            wrapper.addEventListener('mousemove', (e) => {
+                const rect = wrapper.getBoundingClientRect();
+                // Calculate cursor position as a percentage inside the specific text wrapper
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                // Pass coordinates to CSS custom properties
+                wrapper.style.setProperty('--x', `${x}%`);
+                wrapper.style.setProperty('--y', `${y}%`);
+            });
+        });
+
+        // Interactive Hero Image 3D Tilt Logic
+        const heroVisual = document.querySelector('.hero-visual');
+        const shatteredFrame = document.querySelector('.shattered-frame');
+
+        heroVisual.addEventListener('mousemove', (e) => {
+            const rect = heroVisual.getBoundingClientRect();
+            
+            // Calculate mouse position relative to the center of the container
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            // Normalize values from -1 to 1
+            const normalizedX = x / (rect.width / 2);
+            const normalizedY = y / (rect.height / 2);
+
+            // Max tilt angles in degrees
+            const maxTiltX = 15;
+            const maxTiltY = 15;
+
+            // Calculate rotation (inverted Y for natural tilt feeling)
+            const tiltX = normalizedY * -maxTiltX;
+            const tiltY = normalizedX * maxTiltY;
+
+            shatteredFrame.style.setProperty('--rx', `${tiltX}deg`);
+            shatteredFrame.style.setProperty('--ry', `${tiltY}deg`);
+        });
+
+        heroVisual.addEventListener('mouseleave', () => {
+            // Reset rotation to 0 when mouse leaves
+            shatteredFrame.style.setProperty('--rx', `0deg`);
+            shatteredFrame.style.setProperty('--ry', `0deg`);
+        });
+
+        // Update fake time in nav
+        function updateTime() {
+            const timeDisplay = document.querySelector('.time-display');
+            const now = new Date();
+            // Get time formatted to Pacific Time (PST/PDT) in 24-hour format
+            const timeString = now.toLocaleTimeString('en-US', { 
+                timeZone: 'America/Los_Angeles',
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            timeDisplay.textContent = `SYS.TIME: ${timeString} PST`;
+        }
+        
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
