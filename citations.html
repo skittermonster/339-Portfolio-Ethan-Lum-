@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethan Lum IAT 339 // CITATIONS</title>
+    <!-- Added Orbitron for headers alongside Share Tech Mono for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --yellow: #c07020; /* Muted Burnt Orange */
+            --cyan: #0099b3; /* Deeper, muted teal/cyan */
+            --magenta: #990066; /* Darker, muted plum/magenta */
+            --dark: #150024; /* Even darker background purple */
+            --darker: #06000d; /* Near black */
+            --light: #b0b0b0; /* Softer off-white/grey */
+            --border-width: 2px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hide default OS cursor globally */
+        * {
+            cursor: none !important;
+        }
+
+        /* Custom JS Cyber Cursor Base */
+        .cursor-positioner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 100000;
+        }
+
+        .main-cursor {
+            /* No transition, stays perfectly glued to mouse. Offset to align index finger tip. */
+            transform: translate(calc(var(--cx, 0) * 1px - 12px), calc(var(--cy, 0) * 1px - 2px));
+        }
+
+        /* The Custom External Cursor */
+        .cyber-cursor {
+            width: 30px;
+            height: 30px;
+            background-image: url("cursor-default.png"); /* Looks for local default cursor PNG */
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: scale(1);
+            transform-origin: top left;
+            transition: transform 0.15s ease, background-image 0.2s;
+        }
+
+        /* Hover states for interactive elements */
+        .cursor-positioner.hovering .cyber-cursor {
+            transform: scale(1.1); /* Slightly gentler scale up */
+            /* Switches to hover cursor PNG */
+            background-image: url("cursor-hover.png"); 
+        }
+
+        /* Revert to default touches on Mobile */
+        @media (max-width: 768px) {
+            * { cursor: auto !important; }
+            .cursor-positioner { display: none !important; }
+        }
+
+        /* CRT Scanline Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.2) 50%,
+                rgba(0,0,0,0.2)
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.6;
+        }
+
+        /* Ambient Cyberpunk Background Elements */
+        .horizon-glow {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: 60vh;
+            background: radial-gradient(ellipse at bottom, rgba(153, 0, 102, 0.15) 0%, rgba(0, 153, 179, 0.05) 50%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+            filter: blur(40px);
+        }
+
+        .cyber-matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(var(--cyan) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.05; /* Significantly reduced opacity */
+            z-index: 0;
+            pointer-events: none;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 80%);
+        }
+
+        .synth-grid {
+            position: fixed;
+            bottom: 0;
+            left: -50%;
+            width: 200vw;
+            height: 50vh;
+            background-image:
+                linear-gradient(rgba(255, 0, 170, 0.6) 2px, transparent 2px), /* Increased opacity */
+                linear-gradient(90deg, rgba(0, 229, 255, 0.5) 2px, transparent 2px); /* Increased opacity */
+            background-size: 50px 50px;
+            /* Plane stays perfectly still to maintain perspective vanishing point */
+            transform: perspective(600px) rotateX(75deg) translateZ(-200px);
+            animation: gridMove 2s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+            /* Adjusted mask to show more of the grid before fading */
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0) 90%);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0) 90%);
+        }
+
+        @keyframes gridMove {
+            /* Animate the texture sliding, not the container, for a perfect loop */
+            0% { background-position: 0 0; }
+            100% { background-position: 0 50px; }
+        }
+
+        /* Main Sticky Navigation */
+        .main-nav {
+            position: sticky;
+            top: 0;
+            background: rgba(13, 0, 26, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--magenta);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(255, 0, 170, 0.15);
+        }
+
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--yellow);
+            font-weight: 900;
+            font-size: clamp(1.2rem, 1.5vw, 1.8rem);
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px rgba(255, 123, 0, 0.6);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: clamp(1rem, 3vw, 3rem);
+        }
+
+        .nav-link {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            color: var(--cyan);
+            text-decoration: none;
+            font-size: clamp(1rem, 1.2vw, 1.3rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::before {
+            content: '>';
+            color: var(--yellow);
+            opacity: 0;
+            position: absolute;
+            left: -15px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 10px var(--magenta);
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+            left: -20px;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1500px;
+            width: 90%;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Top Bar / System Status */
+        .sys-nav {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            border-bottom: 1px solid var(--cyan);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            margin-top: 2rem;
+            font-size: clamp(0.8rem, 1vw, 1.1rem);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .sys-nav div:nth-child(1) { text-align: left; }
+        .sys-nav div:nth-child(2) { text-align: center; }
+        .sys-nav div:nth-child(3) { text-align: right; }
+        
+        .sys-nav div {
+            white-space: nowrap;
+        }
+
+        .sys-nav span.blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Typography & Headings */
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--magenta);
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem 0;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--magenta);
+            display: inline-block;
+            padding-right: 2rem;
+            text-shadow: 0 0 5px rgba(153, 0, 102, 0.3);
+        }
+
+        p {
+            color: var(--light);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 2px rgba(224, 224, 224, 0.3);
+            text-align: justify;
+        }
+
+        /* Content Cards */
+        .cyber-card {
+            background: rgba(21, 0, 36, 0.7);
+            border: 1px solid var(--cyan);
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+            backdrop-filter: blur(6px);
+            box-shadow: inset 0 0 10px rgba(0, 153, 179, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .cyber-card:hover {
+            border-color: var(--magenta);
+            box-shadow: inset 0 0 15px rgba(153, 0, 102, 0.1);
+        }
+
+        .cyber-card::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 0;
+            right: 15px;
+            background: var(--light);
+            color: var(--darker);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 4px 12px;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 0 10px rgba(224, 224, 224, 0.5);
+            z-index: 2;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--cyan);
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        /* Lists and Links */
+        .citation-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 1rem;
+        }
+
+        .citation-item {
+            color: var(--light);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed rgba(0, 153, 179, 0.3);
+        }
+
+        .citation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .citation-item::before {
+            content: '>';
+            color: var(--yellow);
+            margin-right: 15px;
+            font-weight: bold;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .link {
+            color: var(--yellow);
+            text-decoration: none;
+            transition: 0.2s;
+            word-break: break-all;
+        }
+
+        .link:hover {
+            color: var(--magenta);
+            text-shadow: 0 0 8px var(--magenta);
+        }
+
+        /* Animations */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .main-nav {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            .nav-links {
+                gap: 1.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .sys-nav {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom JS Cursor Elements -->
+    <div class="cursor-positioner main-cursor">
+        <div class="cyber-cursor"></div>
+    </div>
+
+    <!-- CRT Overlay & Cyber Background -->
+    <div class="scanlines"></div>
+    <div class="cyber-matrix"></div>
+    <div class="horizon-glow"></div>
+    <div class="synth-grid"></div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="main-nav">
+        <div class="nav-brand">PORTFOLIO_OS</div>
+        <div class="nav-links">
+            <a href="index.html#bio" class="nav-link">Bio</a>
+            <a href="index.html#process" class="nav-link">Process</a>
+            <a href="style guide.html" class="nav-link">Style Guide</a>
+            <a href="citations.html" class="nav-link">Citations</a>
+            <a href="index.html#contact" class="nav-link">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Navigation / System Status -->
+        <nav class="sys-nav">
+            <div>SYS.ID: REF-DATA-DB</div>
+            <div>STATUS: <span class="blink" style="color: var(--yellow);">ONLINE</span></div>
+            <div class="time-display">T-MINUS: 00:00:00</div>
+        </nav>
+
+        <h2 class="section-title">Reference_Data</h2>
+
+        <div class="cyber-card" data-label="SYS.CITATIONS">
+            <h3 class="card-title" style="color: var(--magenta);">External Dependencies // Citations</h3>
+            <p>The following external resources, assets, and typography were utilized in the construction of this portfolio architecture and associated project case studies.</p>
+            
+            <ul class="citation-list">
+                <!-- Requested Devpost Citation -->
+                <li class="citation-item">
+                    <div>
+                        <strong>Lumina - AI Talent Intelligence</strong>. Devpost Project Repository. (2025).<br>
+                        Retrieved from: <br>
+                        <a href="https://devpost.com/software/lumina-hq152s" target="_blank" class="link">https://devpost.com/software/lumina-hq152s</a>
+                    </div>
+                </li>
+
+                <!-- Battery Protocol / Power Up Citations -->
+                <li class="citation-item">
+                    <div>
+                        <strong>IAT_445: Battery_Protocol (Power Up VR Game)</strong>. Final Demo Video. Co-created with Dingyi Li, Miku Miyauchi, & Thomas Pearson.<br>
+                        Retrieved from: <br>
+                        <a href="https://youtu.be/eeHzb8VcQoA" target="_blank" class="link">https://youtu.be/eeHzb8VcQoA</a>
+                    </div>
+                </li>
+
+                <!-- Style Guide Font Citations -->
+                <li class="citation-item">
+                    <div>
+                        Pelletier, Matteson. Designer. (N.D.). <strong>Orbitron [Font]</strong>.<br>
+                        Retrieved from: <br>
+                        <a href="https://fonts.google.com/specimen/Orbitron" target="_blank" class="link">https://fonts.google.com/specimen/Orbitron</a>
+                    </div>
+                </li>
+                <li class="citation-item">
+                    <div>
+                        De Rosa, Ralph. Designer. (N.D.). <strong>Share Tech Mono [Font]</strong>.<br>
+                        Retrieved from: <br>
+                        <a href="https://fonts.google.com/specimen/Share+Tech+Mono" target="_blank" class="link">https://fonts.google.com/specimen/Share+Tech+Mono</a>
+                    </div>
+                </li>
+
+                <!-- Fallback / Artifact Image Placeholder -->
+                <li class="citation-item">
+                    <div>
+                        Lorem Picsum. Service. (2026). <strong>Random Stock Image [Image]</strong>.<br>
+                        Retrieved from: <br>
+                        <a href="https://picsum.photos/" target="_blank" class="link">https://picsum.photos/</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 4rem; margin-bottom: 2rem; color: var(--cyan); opacity: 0.5; font-size: 0.8rem;">
+            END OF FILE // DATABASE CONNECTION TERMINATED
+        </div>
+    </div>
+
+    <script>
+        // Custom JS Cursor Logic
+        const mainCursor = document.querySelector('.main-cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            mainCursor.style.setProperty('--cx', e.clientX);
+            mainCursor.style.setProperty('--cy', e.clientY);
+        });
+
+        // Hide custom cursor gracefully when leaving the browser window
+        document.addEventListener('mouseout', (e) => {
+            if (e.clientY <= 0 || e.clientX <= 0 || (e.clientX >= window.innerWidth || e.clientY >= window.innerHeight)) {
+                mainCursor.style.opacity = '0';
+            }
+        });
+        document.addEventListener('mouseover', () => {
+            mainCursor.style.opacity = '1';
+        });
+
+        // Add hover effects to all interactables (links, buttons, artifacts)
+        const interactables = document.querySelectorAll('a, button, .nav-link, .link');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                mainCursor.classList.add('hovering');
+            });
+            el.addEventListener('mouseleave', () => {
+                mainCursor.classList.remove('hovering');
+            });
+        });
+
+        // Update fake time in nav
+        function updateTime() {
+            const timeDisplay = document.querySelector('.time-display');
+            const now = new Date();
+            // Get time formatted to Pacific Time (PST/PDT) in 24-hour format
+            const timeString = now.toLocaleTimeString('en-US', { 
+                timeZone: 'America/Los_Angeles',
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            if(timeDisplay) timeDisplay.textContent = `SYS.TIME: ${timeString} PST`;
+        }
+        
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
